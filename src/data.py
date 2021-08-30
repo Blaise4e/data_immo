@@ -24,19 +24,31 @@ df = df.rename(columns={
                 "Surface terrain": "SurfaceTerrain",
                 "Nombre pieces principales": "NbPieces"})
 
-# Creating the Commune, Voie, and AdressLogement table
+# Creating the Commune and AdresseLogement table
 commune = df[['CodeCommune', 'NomCommune', 'CodePostal']].drop_duplicates()
-voie = df[['CodeVoie', 'TypeVoie', 'Voie']].drop_duplicates()
-adresse_logement = df[['NumVoie', 'BTQ', 'CodeVoie', 'CodeCommune']].drop_duplicates()
 
-# Adding an index to the table that will be merged to get the dependencies
-adresse_logement.insert(0, 'IdAdresse', 'a_' + adresse_logement.index.astype(str))
-df = pd.merge(df, adresse_logement, on = adresse_logement.columns.to_list()[1:])
+# Formating CodePostal into XXXXX format
+commune['CodePostal'] = commune['CodePostal'].astype(str)
+code = commune['CodePostal'].copy()
+code = code.str[:-2]
+code = pd.concat(['0' + code[code.str.len() == 4], code[code.str.len() == 5]])
+commune['CodePostal'] = code
 
 # Same thing with Logement and IdLogement
-logement = df[['ValeurFonciere', 'TypeLocal', 'SurfaceBatie', 'SurfaceTerrain', 'NbPieces']].drop_duplicates()
-logement.insert(0, 'IdLogement', 'l_' + logement.index.astype(str))
+logement = df[['TypeLocal', 'SurfaceBatie', 'SurfaceTerrain', 'NbPieces']].drop_duplicates()
+logement.insert(0, 'IdLogement', logement.index)
 df = pd.merge(df, logement, on = logement.columns.to_list()[1:])
+
+# Again with Voie and IdVoie
+voie = df[['TypeVoie', 'Voie']].drop_duplicates()
+voie.insert(0, 'IdVoie', voie.index)
+df = pd.merge(df, voie, on = voie.columns.to_list()[1:])
+
+adresse_logement = df[['NumVoie', 'BTQ', 'IdVoie', 'CodeCommune']].drop_duplicates()
+
+# Adding an index to the table that will be merged to get the dependencies
+adresse_logement.insert(0, 'IdAdresse', adresse_logement.index)
+df = pd.merge(df, adresse_logement, on = adresse_logement.columns.to_list()[1:])
 
 # Thirdly, on Mutation and IdMutation
 mutation = df[['DateMutation']].drop_duplicates()
@@ -52,6 +64,6 @@ voie.to_csv('../data/voie.csv', index = False)
 commune.to_csv('../data/commune.csv', index = False)    
 adresse_logement.to_csv('../data/adresse_logement.csv', index = False)
 logement.to_csv('../data/logement.csv', index = False)
-mutation.to_csv('../data/mutations.csv', index = False)
+mutation.to_csv('../data/mutation.csv', index = False)
 mutation_assoc.to_csv('../data/mutation_assoc.csv', index = False)
 adresse_assoc.to_csv('../data/adresse_assoc.csv', index = False)

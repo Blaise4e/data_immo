@@ -1,24 +1,20 @@
 <diagram program="umletino" version="14.4.0-SNAPSHOT"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>380</x><y>20</y><w>300</w><h>160</h></coordinates><panel_attributes>Logement
 --
 _IdLogement_
-ValeurFonciere
 TypeLocal
 SurfaceBatie
 SurfaceTerrain
 NbPieces
---
-IdAdresse
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>500</y><w>210</w><h>70</h></coordinates><panel_attributes>Commune
 --
 _CodeCommune_
 Nom
 CodePostal
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>40</y><w>210</w><h>90</h></coordinates><panel_attributes>Mutation
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>40</y><w>210</w><h>80</h></coordinates><panel_attributes>Mutation
 --
 _IdMutation_
 DateMutation
---
-IdLogement
+ValeurFonciere
 
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>410</x><y>280</y><w>210</w><h>140</h></coordinates><panel_attributes>AdresseLogement
 --
@@ -33,7 +29,7 @@ CodeCommune
 
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>280</y><w>210</w><h>90</h></coordinates><panel_attributes>Voie
 --
-_CodeVoie_
+_IdVoie_
 Voie
 TypeVoie</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>710</x><y>20</y><w>210</w><h>90</h></coordinates><panel_attributes>Plan
 --
