@@ -1,91 +1,107 @@
-CREATE IF NOT EXISTS DATABASE data_immo
+CREATE DATABASE IF NOT EXISTS data_immo;
 
-CREATE TABLE Plan(
-    NumPlan int PRIMARY KEY,
-)
+USE data_immo;
 
-CREATE TABLE Section(
+CREATE TABLE IF NOT EXISTS Plan(
+    NumPlan int PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS Section(
     Section varchar(255) NOT NULL,
     PrefixeSection float,
     NumPlan int,
     FOREIGN KEY (NumPlan) REFERENCES Plan(NumPlan)
-)
+);
 
-CREATE TABLE NatureCulture(
+CREATE TABLE IF NOT EXISTS NatureCulture(
     CodeNature varchar(255) PRIMARY KEY,
-    Libelle varchar(255),
-)
+    Libelle varchar(255)
+);
 
-CREATE TABLE Volume(
+CREATE TABLE IF NOT EXISTS Volume(
     NumVolume int PRIMARY KEY,
     NbLots int,
     Section varchar(255),
     CodeNature varchar(255),
-    FOREIGN KEY (Section) REFERENCES Section(Section)
+    FOREIGN KEY (Section) REFERENCES Section(Section),
     FOREIGN KEY (CodeNature) REFERENCES NatureCulture(CodeNature)
-)
+);
 
-CREATE TABLE Lot(
-    IdLot int PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS Lot(
+    IdLot int PRIMARY KEY,
     SurfaceLot int,
     NumVolume int,
     FOREIGN KEY (NumVolume) REFERENCES Volume(NumVolume)
-)
+);
 
-CREATE TABLE Commune(
+CREATE TABLE IF NOT EXISTS Commune(
     CodeCommune int PRIMARY KEY,
     Nom varchar(255),
-    CodePostal int(5)
-)
+    CodePostal varchar(5)
+);
 
-CREATE TABLE Voie(
-    CodeVoie int PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS Voie(
+    IdVoie int PRIMARY KEY,
     Voie varchar(255),
     TypeVoie varchar(255)
-)
+);
 
-CREATE TABLE AdresseLogement(
-    IdAdresse int PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS AdresseLogement(
+    IdAdresse int PRIMARY KEY,
     NumVoie int,
     BTQ char,
     CodeVoie int,
     CodeCommune int,
     FOREIGN KEY(CodeVoie) REFERENCES Voie(CodeVoie),
     FOREIGN KEY (CodeCommune) REFERENCES Commune(CodeCommune)
-)
+);
 
 CREATE TABLE IF NOT EXISTS Logement(
-    IdLogement int PRIMARY KEY AUTOINCREMENT,
-    ValeurFonciere int,
+    IdLogement int PRIMARY KEY,
     TypeLocal varchar(255),
     SurfaceBatie int,
     SurfaceTerrain int,
     NbPieces int
-)
+);
 
-CREATE TABLE AdresseAssoc(
+CREATE TABLE IF NOT EXISTS AdresseAssoc(
     IdLogement int,
     IdAdresse int,
     FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement),
     FOREIGN KEY (IdAdresse) REFERENCES Adresse(IdAdresse)
-)
+);
 
-CREATE TABLE Mutation(
-    IdMutation int PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS Mutation(
+    IdMutation int PRIMARY KEY,
     DateMutation date,
-)
+    ValeurFonciere int
+);
 
-CREATE TABLE MutationAssoc(
+CREATE TABLE IF NOT EXISTS MutationAssoc(
     IdMutation int,
     IdLogement int,
     FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement),
     FOREIGN KEY (IdMutation) REFERENCES Mutation(IdMutation)
-)
+);
+DELETE FROM Voie;
+DELETE FROM Commune;
+DELETE FROM AdresseLogement;
+DELETE FROM Logement;
+DELETE FROM AdresseAssoc;
+DELETE FROM Mutation;
+DELETE FROM MutationAssoc;
 
-LOAD DATA INFILE '../data/voie.csv' INTO TABLE Voie;
-LOAD DATA INFILE '../data/commune.csv' INTO TABLE Commune;
-LOAD DATA INFILE '../data/adresse_logement.csv' INTO TABLE AdresseLogement;
-LOAD DATA INFILE '../data/logement.csv' INTO TABLE Logement;
-LOAD DATA INFILE '../data/addresse_assoc.csv' INTO TABLE AdresseAssoc;
-LOAD DATA INFILE '../data/mutation.csv' INTO TABLE Mutation;
-LOAD DATA INFILE '../data/mutation_assoc.csv' INTO TABLE MutationAssoc;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/voie.csv' IGNORE INTO TABLE Voie
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/commune.csv' IGNORE INTO TABLE Commune
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/adresse_logement.csv' IGNORE INTO TABLE AdresseLogement
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/logement.csv' IGNORE INTO TABLE Logement
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/adresse_assoc.csv' IGNORE INTO TABLE AdresseAssoc
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/mutation.csv' IGNORE INTO TABLE Mutation
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/mutation_assoc.csv' IGNORE INTO TABLE MutationAssoc
+COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
