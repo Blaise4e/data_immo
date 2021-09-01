@@ -1,6 +1,8 @@
+DROP DATABASE data_immo;
 CREATE DATABASE IF NOT EXISTS data_immo;
 
 USE data_immo;
+
 
 CREATE TABLE IF NOT EXISTS Plan(
     NumPlan int PRIMARY KEY
@@ -74,7 +76,8 @@ CREATE TABLE IF NOT EXISTS AdresseAssoc(
 CREATE TABLE IF NOT EXISTS Mutation(
     IdMutation int PRIMARY KEY,
     DateMutation date,
-    ValeurFonciere int
+    ValeurFonciere int,
+    TypeMutation varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS MutationAssoc(
@@ -91,17 +94,19 @@ DELETE FROM AdresseAssoc;
 DELETE FROM Mutation;
 DELETE FROM MutationAssoc;
 
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/voie.csv' IGNORE INTO TABLE Voie
+
+
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/voie.csv' IGNORE INTO TABLE Voie
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/commune.csv' IGNORE INTO TABLE Commune
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/commune.csv' IGNORE INTO TABLE Commune
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/adresse_logement.csv' IGNORE INTO TABLE AdresseLogement
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/adresse_logement.csv' IGNORE INTO TABLE AdresseLogement
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/logement.csv' IGNORE INTO TABLE Logement
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/logement.csv' IGNORE INTO TABLE Logement
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/adresse_assoc.csv' IGNORE INTO TABLE AdresseAssoc
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/adresse_assoc.csv' IGNORE INTO TABLE AdresseAssoc
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/mutation.csv' IGNORE INTO TABLE Mutation
-COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/mutation_assoc.csv' IGNORE INTO TABLE MutationAssoc
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/mutation.csv' IGNORE INTO TABLE Mutation
+COLUMNS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA INFILE 'C:/Users/Utilisateur/Desktop/Exercices/data_immo/data/CURATED/mutation_assoc.csv' IGNORE INTO TABLE MutationAssoc
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;

@@ -16,6 +16,7 @@ df = df_og.copy()
 # Renaming the columns to fit the Model
 df = df.rename(columns={
                 "Date mutation": "DateMutation",
+                "Nature mutation": "TypeMutation",
                 "Valeur fonciere": "ValeurFonciere",
                 "No voie": "NumVoie",
                 "B/T/Q": "BTQ",
@@ -60,7 +61,7 @@ adresse_logement.insert(0, 'IdAdresse', adresse_logement.index)
 df = pd.merge(df, adresse_logement, on = adresse_logement.columns.to_list()[1:])
 
 # Thirdly, on Mutation and IdMutation
-mutation = df[['DateMutation', 'ValeurFonciere']].drop_duplicates()
+mutation = df[['DateMutation', 'ValeurFonciere', 'TypeMutation']].drop_duplicates()
 mutation.insert(0, 'IdMutation', mutation.index)
 df = pd.merge(df, mutation, on = mutation.columns.to_list()[1:])
 
