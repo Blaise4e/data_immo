@@ -4,20 +4,22 @@ import os
 os.chdir('..')
 FILE_PATH = os.getcwd() + '\data\RAW\\'
 FILE_NAME = 'Les_donnees.xlsx'
+#FILE_NAME = 'valeursfoncieres-2020.txt'
 EXPORT_PATH = 'data/CURATED/'
 
 # Loading the data from a excel file
 if FILE_NAME.split('.')[1] == 'xlsx':
     df_og = pd.read_excel(fr'{FILE_PATH}{FILE_NAME}')
 else:
-    df_og = pd.read_csv(fr'{FILE_PATH}{FILE_NAME}')
+    df_og = pd.read_csv(fr'{FILE_PATH}{FILE_NAME}', sep = '|')
+
 df = df_og.copy()
 
 # Renaming the columns to fit the Model
 df = df.rename(columns={
                 "Date mutation": "DateMutation",
-                "Nature mutation": "TypeMutation",
                 "Valeur fonciere": "ValeurFonciere",
+                "Nature mutation": "TypeMutation",
                 "No voie": "NumVoie",
                 "B/T/Q": "BTQ",
                 "Type de voie": "TypeVoie",
@@ -35,7 +37,7 @@ df = df.rename(columns={
                 "Nombre pieces principales": "NbPieces"})
 
 # Creating the Commune and AdresseLogement table
-commune = df[['CodeCommune', 'NomCommune', 'CodePostal']].drop_duplicates()
+commune = df[['CodeCommune', 'NomCommune', 'CodePostal']].drop_duplicates().reset_index(drop = True)
 
 # Formating CodePostal into XXXXX format
 commune['CodePostal'] = commune['CodePostal'].astype(str)
@@ -44,30 +46,29 @@ code = code.str[:-2]
 code = pd.concat(['0' + code[code.str.len() == 4], code[code.str.len() == 5]])
 commune['CodePostal'] = code
 
-# Same thing with Logement and IdLogement
-logement = df[['TypeLocal', 'SurfaceBatie', 'SurfaceTerrain', 'NbPieces']].drop_duplicates()
-logement.insert(0, 'IdLogement', logement.index)
-df = pd.merge(df, logement, on = logement.columns.to_list()[1:])
+# Adding an index to the table that will be merged to get the dependencies
+logement = df[['TypeLocal', 'SurfaceBatie', 'SurfaceTerrain', 'NbPieces']]
+logement.insert(0, 'IdLogement', df.index)
+df = pd.merge(df, logement['IdLogement'], left_on = df.index, right_on = 'IdLogement')
 
 # Again with Voie and IdVoie
-voie = df[['TypeVoie', 'Voie']].drop_duplicates()
+voie = df[['TypeVoie', 'Voie']].drop_duplicates().reset_index(drop = True)
 voie.insert(0, 'IdVoie', voie.index)
 df = pd.merge(df, voie, on = voie.columns.to_list()[1:])
 
-adresse_logement = df[['NumVoie', 'BTQ', 'IdVoie', 'CodeCommune']].drop_duplicates()
-
 # Adding an index to the table that will be merged to get the dependencies
+adresse_logement = df[['NumVoie', 'BTQ', 'IdVoie', 'CodeCommune']].drop_duplicates().reset_index(drop = True)
 adresse_logement.insert(0, 'IdAdresse', adresse_logement.index)
 df = pd.merge(df, adresse_logement, on = adresse_logement.columns.to_list()[1:])
 
 # Thirdly, on Mutation and IdMutation
-mutation = df[['DateMutation', 'ValeurFonciere', 'TypeMutation']].drop_duplicates()
+mutation = df[['DateMutation', 'ValeurFonciere', 'TypeMutation']].drop_duplicates().reset_index(drop = True)
 mutation.insert(0, 'IdMutation', mutation.index)
 df = pd.merge(df, mutation, on = mutation.columns.to_list()[1:])
 
 # Creating association tables MutationAssoc and AdressAssoc
-mutation_assoc = df[['IdLogement', 'IdMutation']].drop_duplicates()
-adresse_assoc = df[['IdLogement', 'IdAdresse']].drop_duplicates()
+mutation_assoc = df[['IdLogement', 'IdMutation']].drop_duplicates().reset_index(drop = True)
+adresse_assoc = df[['IdLogement', 'IdAdresse']].drop_duplicates().reset_index(drop = True)
 
 # Export all into csv files for sql importation
 voie.to_csv(EXPORT_PATH + 'voie.csv', index = False)
