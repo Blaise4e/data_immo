@@ -99,7 +99,7 @@ m1=1..n</panel_attributes><additional_attributes>10;10;10;60</additional_attribu
 --
 _IdMutation_
 _IdLogement_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>100</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
-m1=0..n</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>470</x><y>210</y><w>120</w><h>70</h></coordinates><panel_attributes>AdresseAssoc
+m1=0..1</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLUseCase</id><coordinates><x>470</x><y>210</y><w>120</w><h>70</h></coordinates><panel_attributes>AdresseAssoc
 --
 _IdLogement_
 _IdAdresse_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>520</x><y>270</y><w>50</w><h>90</h></coordinates><panel_attributes>lt=-
