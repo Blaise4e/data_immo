@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS data_immo;
 USE data_immo;
 
 CREATE TABLE IF NOT EXISTS Plan(
-    NumPlan int PRIMARY KEY
+    NumPlan varchar(255) PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS Section(
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS NatureCulture(
 );
 
 CREATE TABLE IF NOT EXISTS Volume(
-    NumVolume int PRIMARY KEY,
+    NumVolume varchar(255) PRIMARY KEY,
     NbLots int,
     Section varchar(255),
     CodeNature varchar(255),
@@ -28,26 +28,26 @@ CREATE TABLE IF NOT EXISTS Volume(
 );
 
 CREATE TABLE IF NOT EXISTS Lot(
-    IdLot int PRIMARY KEY,
+    IdLot varchar(255) PRIMARY KEY,
     SurfaceLot int,
     NumVolume int,
     FOREIGN KEY (NumVolume) REFERENCES Volume(NumVolume)
 );
 
 CREATE TABLE IF NOT EXISTS Commune(
-    CodeCommune int PRIMARY KEY,
+    CodeCommune varchar(255) PRIMARY KEY,
     Nom varchar(255),
     CodePostal varchar(5)
 );
 
 CREATE TABLE IF NOT EXISTS Voie(
-    IdVoie int PRIMARY KEY,
+    IdVoie varchar(255) PRIMARY KEY,
     Voie varchar(255),
     TypeVoie varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS AdresseLogement(
-    IdAdresse int PRIMARY KEY,
+    IdAdresse varchar(255) PRIMARY KEY,
     NumVoie int,
     BTQ char,
     CodeVoie int,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS AdresseLogement(
 );
 
 CREATE TABLE IF NOT EXISTS Logement(
-    IdLogement int PRIMARY KEY,
+    IdLogement varchar(255) PRIMARY KEY,
     TypeLocal varchar(255),
     SurfaceBatie int,
     SurfaceTerrain int,
@@ -65,21 +65,22 @@ CREATE TABLE IF NOT EXISTS Logement(
 );
 
 CREATE TABLE IF NOT EXISTS AdresseAssoc(
-    IdLogement int,
-    IdAdresse int,
+    IdLogement varchar(255),
+    IdAdresse varchar(255),
     FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement),
     FOREIGN KEY (IdAdresse) REFERENCES Adresse(IdAdresse)
 );
 
 CREATE TABLE IF NOT EXISTS Mutation(
-    IdMutation int PRIMARY KEY,
+    IdMutation varchar(255) PRIMARY KEY,
     DateMutation date,
-    ValeurFonciere int
+    ValeurFonciere int,
+    TypeMutation varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS MutationAssoc(
-    IdMutation int,
-    IdLogement int,
+    IdMutation varchar(255),
+    IdLogement varchar(255),
     FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement),
     FOREIGN KEY (IdMutation) REFERENCES Mutation(IdMutation)
 );
