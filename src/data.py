@@ -3,8 +3,8 @@ import os
 
 os.chdir('..')
 FILE_PATH = os.getcwd() + '\data\RAW\\'
-#FILE_NAME = 'Les_donnees.xlsx'
-FILE_NAME = 'valeursfoncieres-2020.txt'
+FILE_NAME = 'Les_donnees.xlsx'
+#FILE_NAME = 'valeursfoncieres-2020.txt'
 EXPORT_PATH = 'data/CURATED/'
 
 # Loading the data from a excel file
