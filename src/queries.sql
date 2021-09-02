@@ -115,6 +115,24 @@ WHERE trimestre2.Nb / trimestre2.Nb > 1.2;
 -- Différence en pourcentage du prix au mètre carré entre un appartement de 2 pièces et un
 -- appartement de 3 pièces
 
+SELECT DISTINCT((
+    SELECT ROUND(AVG(Mutation.ValeurFonciere / logement.SurfaceBatie),2) FROM Mutation
+    JOIN Logement ON Logement.IdLogement = Mutation.IdLogement
+    WHERE Logement.TypeLocal = 'Appartement'
+    AND Logement.NbPieces = 3
+) - (
+    SELECT ROUND(AVG(Mutation.ValeurFonciere / logement.SurfaceBatie),2) FROM Mutation
+    JOIN Logement ON Logement.IdLogement = Mutation.IdLogement
+    WHERE Logement.TypeLocal = 'Appartement'
+    AND Logement.NbPieces = 2
+)) / (
+    SELECT ROUND(AVG(Mutation.ValeurFonciere / logement.SurfaceBatie),2) FROM Mutation
+    JOIN Logement ON Logement.IdLogement = Mutation.IdLogement
+    WHERE Logement.TypeLocal = 'Appartement'
+    AND Logement.NbPieces = 3
+) * 100 AS Difference
+FROM Mutation;
+
 -- Les moyennes de valeurs foncières pour le top 3 des communes des départements 6, 13, 33,
 -- 59 et 69
 SELECT Commune.Nom, AVG(Mutation.ValeurFonciere) AS PriceMean,
