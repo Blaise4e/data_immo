@@ -1,7 +1,6 @@
 USE data_immo;
 
 -- Nombre total d’appartements vendus au 1er semestre 2020 (1759)
-
 SELECT COUNT(Logement.IdLogement)
 FROM Logement
 JOIN MutationAssoc ON mutationassoc.IdLogement = Logement.IdLogement
