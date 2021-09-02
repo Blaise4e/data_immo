@@ -47,28 +47,24 @@ code = pd.concat(['0' + code[code.str.len() == 4], code[code.str.len() == 5]])
 commune['CodePostal'] = code
 
 # Adding an index to the table that will be merged to get the dependencies
-logement = df[['TypeLocal', 'SurfaceBatie', 'SurfaceTerrain', 'NbPieces']]
-logement.insert(0, 'IdLogement', df.index)
-df = pd.merge(df, logement['IdLogement'], left_on = df.index, right_on = 'IdLogement')
-
-# Again with Voie and IdVoie
 voie = df[['TypeVoie', 'Voie']].drop_duplicates().reset_index(drop = True)
 voie.insert(0, 'IdVoie', voie.index)
-df = pd.merge(df, voie, on = voie.columns.to_list()[1:])
+df = pd.merge(df, voie, how = 'outer', on = voie.columns.to_list()[1:])
 
-# Adding an index to the table that will be merged to get the dependencies
+# Doing the same with AdresseLogement table
 adresse_logement = df[['NumVoie', 'BTQ', 'IdVoie', 'CodeCommune']].drop_duplicates().reset_index(drop = True)
 adresse_logement.insert(0, 'IdAdresse', adresse_logement.index)
-df = pd.merge(df, adresse_logement, on = adresse_logement.columns.to_list()[1:])
+df = pd.merge(df, adresse_logement, how = 'outer', on = adresse_logement.columns.to_list()[1:])
+
+# Doing the same with Logement table
+logement = df[['TypeLocal', 'SurfaceBatie', 'SurfaceTerrain', 'NbPieces', 'IdAdresse']].drop_duplicates().reset_index(drop = True)
+logement.insert(0, 'IdLogement', logement.index)
+df = pd.merge(df, logement, on = logement.columns.to_list()[1:])
 
 # Thirdly, on Mutation and IdMutation
-mutation = df[['DateMutation', 'ValeurFonciere', 'TypeMutation']].drop_duplicates().reset_index(drop = True)
-mutation.insert(0, 'IdMutation', mutation.index)
-df = pd.merge(df, mutation, on = mutation.columns.to_list()[1:])
-
-# Creating association tables MutationAssoc and AdressAssoc
-mutation_assoc = df[['IdLogement', 'IdMutation']].drop_duplicates().reset_index(drop = True)
-adresse_assoc = df[['IdLogement', 'IdAdresse']].drop_duplicates().reset_index(drop = True)
+mutation = df[['DateMutation', 'ValeurFonciere', 'TypeMutation', 'IdLogement']].drop_duplicates().reset_index(drop = True)
+mutation.insert(0, 'IdMutation', df.index)
+df = pd.merge(df, mutation['IdMutation'], how = 'outer', left_on = df.index, right_on = 'IdMutation')
 
 # Export all into csv files for sql importation
 voie.to_csv(EXPORT_PATH + 'voie.csv', index = False)
@@ -76,5 +72,3 @@ commune.to_csv(EXPORT_PATH + 'commune.csv', index = False)
 adresse_logement.to_csv(EXPORT_PATH + 'adresse_logement.csv', index = False)
 logement.to_csv(EXPORT_PATH + 'logement.csv', index = False)
 mutation.to_csv(EXPORT_PATH + 'mutation.csv', index = False)
-mutation_assoc.to_csv(EXPORT_PATH + 'mutation_assoc.csv', index = False)
-adresse_assoc.to_csv(EXPORT_PATH + 'adresse_assoc.csv', index = False)

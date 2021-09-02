@@ -1,3 +1,4 @@
+DROP DATABASE data_immo;
 CREATE DATABASE IF NOT EXISTS data_immo;
 
 USE data_immo;
@@ -35,62 +36,51 @@ CREATE TABLE IF NOT EXISTS Lot(
 );
 
 CREATE TABLE IF NOT EXISTS Commune(
-    CodeCommune varchar(255) PRIMARY KEY,
+    CodeCommune int PRIMARY KEY,
     Nom varchar(255),
     CodePostal varchar(5)
 );
 
 CREATE TABLE IF NOT EXISTS Voie(
-    IdVoie varchar(255) PRIMARY KEY,
+    IdVoie int PRIMARY KEY,
     Voie varchar(255),
     TypeVoie varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS AdresseLogement(
-    IdAdresse varchar(255) PRIMARY KEY,
+    IdAdresse int PRIMARY KEY,
     NumVoie int,
     BTQ char,
-    CodeVoie int,
+    IdVoie int,
     CodeCommune int,
-    FOREIGN KEY(CodeVoie) REFERENCES Voie(CodeVoie),
+    FOREIGN KEY(IdVoie) REFERENCES Voie(IdVoie),
     FOREIGN KEY (CodeCommune) REFERENCES Commune(CodeCommune)
 );
 
 CREATE TABLE IF NOT EXISTS Logement(
-    IdLogement varchar(255) PRIMARY KEY,
+    IdLogement int PRIMARY KEY,
     TypeLocal varchar(255),
     SurfaceBatie int,
     SurfaceTerrain int,
-    NbPieces int
-);
-
-CREATE TABLE IF NOT EXISTS AdresseAssoc(
-    IdLogement varchar(255),
-    IdAdresse varchar(255),
-    FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement),
-    FOREIGN KEY (IdAdresse) REFERENCES Adresse(IdAdresse)
+    NbPieces int,
+    IdAdresse int,
+    FOREIGN KEY (IdAdresse) REFERENCES AdresseLogement(IdAdresse)
 );
 
 CREATE TABLE IF NOT EXISTS Mutation(
-    IdMutation varchar(255) PRIMARY KEY,
+    IdMutation int PRIMARY KEY,
     DateMutation date,
     ValeurFonciere int,
-    TypeMutation varchar(255)
+    TypeMutation varchar(255),
+    IdLogement int,
+    FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement)
 );
 
-CREATE TABLE IF NOT EXISTS MutationAssoc(
-    IdMutation varchar(255),
-    IdLogement varchar(255),
-    FOREIGN KEY (IdLogement) REFERENCES Logement(IdLogement),
-    FOREIGN KEY (IdMutation) REFERENCES Mutation(IdMutation)
-);
 DELETE FROM Voie;
 DELETE FROM Commune;
 DELETE FROM AdresseLogement;
 DELETE FROM Logement;
-DELETE FROM AdresseAssoc;
 DELETE FROM Mutation;
-DELETE FROM MutationAssoc;
 
 LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/voie.csv' IGNORE INTO TABLE Voie
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
@@ -100,9 +90,5 @@ LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/adresse_logem
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
 LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/logement.csv' IGNORE INTO TABLE Logement
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/adresse_assoc.csv' IGNORE INTO TABLE AdresseAssoc
-COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
 LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/mutation.csv' IGNORE INTO TABLE Mutation
-COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
-LOAD DATA INFILE 'C:/Users/simplon/Ecole_IA/data_immo/data/CURATED/mutation_assoc.csv' IGNORE INTO TABLE MutationAssoc
 COLUMNS TERMINATED BY ',' IGNORE 1 LINES;
